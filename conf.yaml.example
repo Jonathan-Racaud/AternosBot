@@ -1,6 +1,6 @@
 bot_token: "your_discord_bot_token"
 user:
-  email: "email@provider.com"
+  username: "your_username"
   password: "super_password"
 host:
   aternos: "https://aternos.org/server/"

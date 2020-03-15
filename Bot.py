@@ -5,6 +5,7 @@ import discord
 from discord.ext import commands
 from connect_and_launch import start_server
 from lxml import html
+from load_conf import load_yaml
 
 conf = load_yaml("conf.yaml")
 BOT_TOKEN = conf['bot_token']
@@ -18,9 +19,9 @@ async def on_ready():
 
 @bot.command()
 async def start(ctx):
-    if get_status == "Offline":
+    if get_status() == "Offline":
         await ctx.send("Starting the server")
-        await start_server()
+        await start_server(ctx)
     else:
         await ctx.send("Server already running")
 
@@ -29,7 +30,7 @@ async def status(ctx):
     await ctx.send("The server is {0}".format(get_status()))
 
 @bot.command()
-async def status(ctx):
+async def players(ctx):
     await ctx.send("There are {0} players on the server".format(get_number_of_players()))
 
 @bot.command()
