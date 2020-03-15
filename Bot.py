@@ -1,51 +1,51 @@
-import discord
+#!/usr/bin/env python3
 import os
-from lxml import html
 import requests
+import discord
+from discord.ext import commands
 from connect_and_launch import start_server
-from dotenv import load_dotenv
+from lxml import html
 
+conf = load_yaml("conf.yaml")
+BOT_TOKEN = conf['bot_token']
+SERVER = conf['host']['server']
 
-load_dotenv()
-BOT_TOKEN = os.getenv("BOT_TOKEN")
+bot = commands.Bot(command_prefix="!")
 
-client = discord.Client()
-
-@client.event
+@bot.event
 async def on_ready():
-    print('We have logged in as {0.user}'.format(client))
+    print('We have logged in as {0.user.name}#{0.user.id}'.format(bot))
 
-@client.event
-async def on_message(message):
-    if message.author == client.user:
-        return
-    if message.content == '-Jackadit launch_server':
-        if get_status() == "Offline":
-            await message.channel.send("Launching the server boss !")
-            await start_server()
-        else:
-            await message.channel.send("The server is already Online")
-    if message.content == '-Jackadit server_status':
-        status = get_status()
-        await message.channel.send("The server is {}".format(status))
-    if message.content == '-Jackadit players':
-        players = get_number_of_players()
-        await message.channel.send("There are {} players on the server".format(players))
-    if message.content == '-Jackadit stop_server':
-        await message.channel.send("Mazal ma temchi")
+@bot.command()
+async def start(ctx):
+    if get_status == "Offline":
+        await ctx.send("Starting the server")
+        await start_server()
+    else:
+        await ctx.send("Server already running")
+
+@bot.command()
+async def status(ctx):
+    await ctx.send("The server is {0}".format(get_status()))
+
+@bot.command()
+async def status(ctx):
+    await ctx.send("There are {0} players on the server".format(get_number_of_players()))
+
+@bot.command()
+async def stop(ctx):
+    await ctx.send("I do no know how to stop the server yet!")
 
 def get_status():
-    page = requests.get('https://jackadit.aternos.me')
+    page = requests.get(SERVER)
     tree = html.fromstring(page.content)
     status = tree.xpath('/html/body/div/div[3]/div/div/div[1]/span/text()')
     return status[0]
+
 def get_number_of_players():
-    page = requests.get('https://jackadit.aternos.me')
+    page = requests.get(SERVER)
     tree = html.fromstring(page.content)
     status = tree.xpath('/html/body/div/div[4]/div/div/div/span[1]/text()')
     return status[0]
 
-    
-    
-
-client.run(BOT_TOKEN)
+bot.run(BOT_TOKEN)

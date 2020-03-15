@@ -1,20 +1,21 @@
+import os
+import time
+import asyncio
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
-import asyncio
-import time
-from dotenv import load_dotenv
-import os
+from load_conf import load_yaml
 
-load_dotenv()
-USER = os.getenv('USER')
-PASSWORD = os.getenv('PASSWORD')
+conf = load_yaml("conf.yaml")
+USER = conf['user']['email']
+PASSWORD = conf['user']['password']
+SERVER = conf['host']['aternos']
 
 options = webdriver.ChromeOptions()
 options.add_argument('headless')
 
 driver = webdriver.Chrome(options=options)
 async def start_server():
-    driver.get("https://aternos.org/go/")
+    driver.get(SERVER)
     e = driver.find_element_by_xpath('//*[@id="user"]')
     e.send_keys(USER)
     e = driver.find_element_by_xpath('//*[@id="password"]')
