@@ -59,6 +59,7 @@ def get_number_of_players():
 
 def signal_handler(signum, frame):
     print("Received signal {0}. Terminating now".format(signum))
+    bot.close()
     sys.exit(0)
 
 signal.signal(signal.SIGINT, signal_handler)
