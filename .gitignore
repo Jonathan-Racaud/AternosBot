@@ -1,6 +1,3 @@
-__pycache__/
-.vscode/
-.env
-venv/
-*.log
 conf.yaml
+bin
+obj
