@@ -13,14 +13,15 @@ import AternosParsingError
 conf = load_yaml("/home/jracaud/.discord/bots/aternos/conf.yaml")
 USER = conf['user']['username']
 PASSWORD = conf['user']['password']
-SERVER = conf['host']['aternos']
+ATERNOS = conf['host']['aternos']
+SERVER = conf['host']['server']
 
 async def start_server(ctx):
     options = webdriver.ChromeOptions()
     options.add_argument('headless')
 
     driver = webdriver.Chrome(options=options)
-    driver.get(SERVER)
+    driver.get(ATERNOS)
 
     __login(driver)
     await ctx.send("Step 01/05: Logged in to the administration panel.")
@@ -50,6 +51,18 @@ async def start_server(ctx):
         time.sleep(30)
     await ctx.send("Step 05/05: Server is now ONLINE and ready for you to join")
     driver.close()
+
+def get_status():
+    page = requests.get(SERVER)
+    tree = html.fromstring(page.content)
+    status = tree.xpath('/html/body/div/div[3]/div/div/div[1]/span/text()')
+    return status[0]
+
+def get_number_of_players():
+    page = requests.get(SERVER)
+    tree = html.fromstring(page.content)
+    status = tree.xpath('/html/body/div/div[4]/div/div/div/span[1]/text()')
+    return status[0]
 
 def __login(driver):
     e = driver.find_element_by_id('user')
