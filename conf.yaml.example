@@ -1,7 +1,0 @@
-bot_token: "your_discord_bot_token"
-user:
-  username: "your_username"
-  password: "super_password"
-host:
-  aternos: "https://aternos.org/server/"
-  server: "https://your_server.aternos.me"
