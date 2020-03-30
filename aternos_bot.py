@@ -1,11 +1,8 @@
 #!/usr/bin/env python3
 import signal, os, sys
-import thread
-import requests
 import discord
 from discord.ext import commands
 from bot_actions import start_server, get_status, get_number_of_players
-from lxml import html
 from load_conf import load_yaml
 import AternosParsingError
 
@@ -20,9 +17,6 @@ async def on_ready():
 
 @bot.command(description="Start the server.")
 async def start(ctx):
-    thread.start_new_thread(_threaded_start, ctx)
-
-def _threaded_start(ctx):
     try:
         if get_status() == "Offline":
             await ctx.send("Starting the server")
